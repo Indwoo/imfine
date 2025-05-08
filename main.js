@@ -7,6 +7,7 @@ const data = [
 function rerenderAll() {
   renderChart();
   renderEditTable();
+  updateJsonEditor();
 }
 
 function renderChart() {
@@ -122,6 +123,36 @@ document.getElementById('add-button').onclick = () => {
 
   rerenderAll();
 };
+
+document.getElementById('apply-json').onclick = () => {
+  const editor = document.getElementById('json-editor');
+  try {
+    const parsed = JSON.parse(editor.value);
+
+    if (!Array.isArray(parsed)) {
+      throw new Error('JSON의 배열 형식을 준수하세요!');
+    }
+
+    const valid = parsed.every(item =>
+      typeof item.id === 'string' &&
+      typeof item.value === 'number'
+    );
+    if (!valid) {
+      throw new Error('{ id: string, value: number } 형식을 준수해주세요!');
+    }
+
+    data.length = 0;
+    parsed.forEach(item => data.push(item));
+    rerenderAll();
+  } catch (e) {
+    alert('잘못된 형식입니다 : ' + e.message);
+  }
+};
+
+function updateJsonEditor() {
+  const editor = document.getElementById('json-editor');
+  editor.value = JSON.stringify(data, null, 2);
+}
 
 
 window.onload = () => {
