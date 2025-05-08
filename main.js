@@ -4,9 +4,13 @@ const data = [
   { id: 'c', value: 45 }
 ];
 
+function rerenderAll() {
+  renderChart();
+  renderEditTable();
+}
+
 function renderChart() {
   const chart = document.getElementById('chart');
-  chart.innerHTML = '';
 
   const maxY = getMaxY(data.map(d => d.value));
   renderYAxis(maxY);
@@ -37,7 +41,6 @@ function getMaxY(valueList, step = 25) {
 
 function renderYAxis(maxY, step = 25) {
   const axis = document.getElementById('y-axis');
-  axis.innerHTML = '';
 
   const numSteps = maxY / step;
   for (let i = numSteps; i >= 0; i--) {
@@ -48,4 +51,52 @@ function renderYAxis(maxY, step = 25) {
   }
 }
 
-window.onload = renderChart;
+function renderEditTable() {
+  const tbody = document.getElementById('edit-table');
+
+  data.forEach((item, index) => {
+    const tr = document.createElement('tr');
+
+    const tdId = document.createElement('td');
+    tdId.textContent = item.id;
+
+    const tdValue = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = item.value;
+    input.dataset.index = index;
+    tdValue.appendChild(input);
+
+    const tdAction = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '삭제';
+    delBtn.onclick = () => {
+      data.splice(index, 1);
+      rerenderAll();
+    };
+    tdAction.appendChild(delBtn);
+
+    tr.appendChild(tdId);
+    tr.appendChild(tdValue);
+    tr.appendChild(tdAction);
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById('apply').onclick = () => {
+  const inputs = document.querySelectorAll('#edit-table input');
+  inputs.forEach(input => {
+    const index = input.dataset.index;
+    const newVal = parseInt(input.value, 10);
+    if (!isNaN(newVal)) {
+      data[index].value = newVal;
+    }
+  });
+  rerenderAll();
+};
+
+
+
+window.onload = () => {
+  rerenderAll();
+};
