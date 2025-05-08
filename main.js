@@ -11,6 +11,7 @@ function rerenderAll() {
 
 function renderChart() {
   const chart = document.getElementById('chart');
+  chart.innerHTML = '';
 
   const maxY = getMaxY(data.map(d => d.value));
   renderYAxis(maxY);
@@ -41,6 +42,7 @@ function getMaxY(valueList, step = 25) {
 
 function renderYAxis(maxY, step = 25) {
   const axis = document.getElementById('y-axis');
+   axis.innerHTML = '';
 
   const numSteps = maxY / step;
   for (let i = numSteps; i >= 0; i--) {
@@ -53,6 +55,7 @@ function renderYAxis(maxY, step = 25) {
 
 function renderEditTable() {
   const tbody = document.getElementById('edit-table');
+  tbody.innerHTML = '';
 
   data.forEach((item, index) => {
     const tr = document.createElement('tr');
@@ -95,6 +98,30 @@ document.getElementById('apply').onclick = () => {
   rerenderAll();
 };
 
+document.getElementById('add-button').onclick = () => {
+  const idInput = document.getElementById('add-id');
+  const valueInput = document.getElementById('add-value');
+
+  const newId = idInput.value.trim();
+  const newValue = parseInt(valueInput.value.trim(), 10);
+
+  if (!newId || isNaN(newValue)) {
+    alert('ID와 숫자 값을 입력해주세요.');
+    return;
+  }
+
+  if (data.some(item => item.id === newId)) {
+    alert('중복된 ID입니다.');
+    return;
+  }
+
+  data.push({ id: newId, value: newValue });
+
+  idInput.value = '';
+  valueInput.value = '';
+
+  rerenderAll();
+};
 
 
 window.onload = () => {
