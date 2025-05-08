@@ -11,16 +11,23 @@
   background-color: #f8f8f8;
 }
 
+#chart-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
 .bar-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: center;
-  position: relative;
+  height: 100%;
+  margin : 0 6px;
 }
 
 .bar {
   width: 30px;
   background-color: #ccc;
+  transition: height 0.3s ease;
 }
 
 .bar-label {
@@ -29,4 +36,15 @@
   color: #333;
   position: absolute;
   top: 100%;
+}
+
+#y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  width: 30px;
+  font-size: 12px;
+  text-align: right;
+  padding-right: 5px;
 }
