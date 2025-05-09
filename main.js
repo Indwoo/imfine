@@ -10,21 +10,28 @@ function rerenderAll() {
   updateJsonEditor();
 }
 
+//차트 렌더링
 function renderChart() {
   const chart = document.getElementById('chart');
   chart.innerHTML = '';
 
-  const maxY = getMaxY(data.map(d => d.value));
-  renderYAxis(maxY);
+  const values = data.map(d => d.value);
+  const step = getAutoStep(Math.max(...values)); // step 동적 계산
+  const maxY = getMaxY(values, step);
+  renderYAxis(maxY, step);
 
   data.forEach(item => {
     const container = document.createElement('div');
     container.className = 'bar-container';
 
+    const valueLabel = document.createElement('div');
+    valueLabel.className = 'bar-value';
+    valueLabel.textContent = item.value;
+
     const bar = document.createElement('div');
     bar.className = 'bar';
     bar.style.height = `${(item.value / maxY) * 100}%`;
-    bar.textContent = ''; 
+    bar.textContent = '';
 
     const label = document.createElement('div');
     label.className = 'bar-label';
@@ -32,18 +39,33 @@ function renderChart() {
 
     container.appendChild(bar);
     container.appendChild(label);
+    container.appendChild(valueLabel);
     chart.appendChild(container);
   });
 }
 
+// Y축 Max 값
 function getMaxY(valueList, step = 25) {
   const maxVal = Math.max(...valueList);
   return Math.ceil(maxVal / step) * step;
 }
 
+// Y축 Auto Scaling (기본값 25)
+function getAutoStep(maxVal, maxSteps = 8) {
+  const baseStep = 25;
+  const estimatedSteps = Math.ceil(maxVal / baseStep);
+
+  if (estimatedSteps > maxSteps) {
+    return Math.ceil(maxVal / maxSteps / baseStep) * baseStep;
+  }
+
+  return baseStep;
+}
+
+// Y축 렌더링
 function renderYAxis(maxY, step = 25) {
   const axis = document.getElementById('y-axis');
-   axis.innerHTML = '';
+  axis.innerHTML = '';
 
   const numSteps = maxY / step;
   for (let i = numSteps; i >= 0; i--) {
@@ -54,6 +76,7 @@ function renderYAxis(maxY, step = 25) {
   }
 }
 
+// 값 편집 렌더링
 function renderEditTable() {
   const tbody = document.getElementById('edit-table');
   tbody.innerHTML = '';
@@ -87,7 +110,35 @@ function renderEditTable() {
   });
 }
 
+// 값 편집 Apply 버튼
 document.getElementById('apply').onclick = () => {
+  const idInput = document.getElementById('add-id');
+  const valueInput = document.getElementById('add-value');
+  const newId = idInput.value.trim();
+  const newValue = parseInt(valueInput.value.trim(), 10);
+
+  if (newId || valueInput.value.trim() !== '') {
+    if (!newId) {
+      alert('ID를 입력해주세요!');
+      return;
+    }
+    if (isNaN(newValue)) {
+      alert('값을 입력해주세요!');
+      return;
+    }
+    if (newValue <= 0) {
+      alert('0보다 큰 값을 입력해주세요!');
+      return;
+    }
+    if (data.some(item => item.id === newId)) {
+      alert('중복된 ID입니다!');
+      return;
+    }
+    data.push({ id: newId, value: newValue });
+    idInput.value = '';
+    valueInput.value = '';
+  }
+
   const inputs = document.querySelectorAll('#edit-table input');
   inputs.forEach(input => {
     const index = input.dataset.index;
@@ -96,34 +147,11 @@ document.getElementById('apply').onclick = () => {
       data[index].value = newVal;
     }
   });
-  rerenderAll();
-};
-
-document.getElementById('add-button').onclick = () => {
-  const idInput = document.getElementById('add-id');
-  const valueInput = document.getElementById('add-value');
-
-  const newId = idInput.value.trim();
-  const newValue = parseInt(valueInput.value.trim(), 10);
-
-  if (!newId || isNaN(newValue)) {
-    alert('ID와 숫자 값을 입력해주세요.');
-    return;
-  }
-
-  if (data.some(item => item.id === newId)) {
-    alert('중복된 ID입니다.');
-    return;
-  }
-
-  data.push({ id: newId, value: newValue });
-
-  idInput.value = '';
-  valueInput.value = '';
 
   rerenderAll();
 };
 
+// 값 고급 편집 Apply 버튼
 document.getElementById('apply-json').onclick = () => {
   const editor = document.getElementById('json-editor');
   try {
@@ -153,7 +181,6 @@ function updateJsonEditor() {
   const editor = document.getElementById('json-editor');
   editor.value = JSON.stringify(data, null, 2);
 }
-
 
 window.onload = () => {
   rerenderAll();

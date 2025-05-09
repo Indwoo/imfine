@@ -14,44 +14,43 @@
     <h1>아이엠파인 SD팀 지원자 전인우</h1>
   </header>
   <main>
-    
     <section id="chart-section">
-      <h2>1. 그래프</h2>
+      <h2>그래프</h2>
       <div id="chart-wrapper">
         <div id="y-axis"></div>
         <div id="chart"></div>
       </div>
     </section>
 
-    <section id="edit-section">
-      <h2>2. 값 편집</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>값</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="edit-table"></tbody>
-      </table>
-      <button id="apply">Apply</button>
-    </section>
+    <div class="edit-wrapper">
+      <section id="edit-section">
+        <h2>값 편집</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>값</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="edit-table"></tbody>
+        </table>
+        <div class="button-right">
+          <input id="add-id" type="text" placeholder="ID" />
+          <input id="add-value" type="number" placeholder="VALUE" />
+          <button id="apply">Apply</button>
+        </div>
+      </section>
 
-    <section id="add-section">
-      <h2>3. 값 추가</h2>
-      <input id="add-id" type="text" placeholder="ID" />
-      <input id="add-value" type="number" placeholder="VALUE" />
-      <button id="add-button">Add</button>
-    </section>
-
-    <section id="json-section">
-      <h2>4. 값 고급 편집</h2>
-      <textarea id="json-editor" rows="10" cols="50"></textarea>
-      <br />
-      <button id="apply-json">Apply</button>
-    </section>
-
+      <section id="json-section">
+        <h2>값 고급 편집</h2>
+        <textarea id="json-editor" rows="10" cols="50"></textarea>
+        <br />
+        <div class="button-right">
+          <button id="apply-json">Apply</button>
+        </div>
+      </section>
+    </div>
   </main>
 </body>
 
