@@ -117,7 +117,19 @@ document.getElementById('apply').onclick = () => {
   const newId = idInput.value.trim();
   const newValue = parseInt(valueInput.value.trim(), 10);
 
-  if (newId && !isNaN(newValue)) {
+  if (newId || valueInput.value.trim() !== '') {
+    if (!newId) {
+      alert('ID를 입력해주세요!');
+      return;
+    }
+    if (isNaN(newValue)) {
+      alert('값을 입력해주세요!');
+      return;
+    }
+    if (newValue <= 0) {
+      alert('0보다 큰 값을 입력해주세요!');
+      return;
+    }
     if (data.some(item => item.id === newId)) {
       alert('중복된 ID입니다!');
       return;
