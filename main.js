@@ -88,6 +88,23 @@ function renderEditTable() {
 }
 
 document.getElementById('apply').onclick = () => {
+  const idInput = document.getElementById('add-id');
+  const valueInput = document.getElementById('add-value');
+  const newId = idInput.value.trim();
+  const newValue = parseInt(valueInput.value.trim(), 10);
+
+  // 1. Add 영역: ID와 Value가 모두 입력되어 있을 경우 추가
+  if (newId && !isNaN(newValue)) {
+    if (data.some(item => item.id === newId)) {
+      alert('중복된 ID입니다.');
+      return;
+    }
+    data.push({ id: newId, value: newValue });
+    idInput.value = '';
+    valueInput.value = '';
+  }
+
+  // 2. 테이블 값 수정 반영
   const inputs = document.querySelectorAll('#edit-table input');
   inputs.forEach(input => {
     const index = input.dataset.index;
@@ -96,33 +113,46 @@ document.getElementById('apply').onclick = () => {
       data[index].value = newVal;
     }
   });
-  rerenderAll();
-};
-
-document.getElementById('add-button').onclick = () => {
-  const idInput = document.getElementById('add-id');
-  const valueInput = document.getElementById('add-value');
-
-  const newId = idInput.value.trim();
-  const newValue = parseInt(valueInput.value.trim(), 10);
-
-  if (!newId || isNaN(newValue)) {
-    alert('ID와 숫자 값을 입력해주세요.');
-    return;
-  }
-
-  if (data.some(item => item.id === newId)) {
-    alert('중복된 ID입니다.');
-    return;
-  }
-
-  data.push({ id: newId, value: newValue });
-
-  idInput.value = '';
-  valueInput.value = '';
 
   rerenderAll();
 };
+
+// document.getElementById('apply').onclick = () => {
+//   const inputs = document.querySelectorAll('#edit-table input');
+//   inputs.forEach(input => {
+//     const index = input.dataset.index;
+//     const newVal = parseInt(input.value, 10);
+//     if (!isNaN(newVal)) {
+//       data[index].value = newVal;
+//     }
+//   });
+//   rerenderAll();
+// };
+
+// document.getElementById('add-button').onclick = () => {
+//   const idInput = document.getElementById('add-id');
+//   const valueInput = document.getElementById('add-value');
+
+//   const newId = idInput.value.trim();
+//   const newValue = parseInt(valueInput.value.trim(), 10);
+
+//   if (!newId || isNaN(newValue)) {
+//     alert('ID와 숫자 값을 입력해주세요.');
+//     return;
+//   }
+
+//   if (data.some(item => item.id === newId)) {
+//     alert('중복된 ID입니다.');
+//     return;
+//   }
+
+//   data.push({ id: newId, value: newValue });
+
+//   idInput.value = '';
+//   valueInput.value = '';
+
+//   rerenderAll();
+// };
 
 document.getElementById('apply-json').onclick = () => {
   const editor = document.getElementById('json-editor');

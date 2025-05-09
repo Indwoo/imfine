@@ -109,6 +109,17 @@ button:hover {
 #json-editor {
   width: 100%;
   padding: 10px;
-  margin-top: 10px;
   resize: vertical;
+}
+
+.edit-wrapper {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+#edit-section,
+#json-section {
+  flex: 1;
+  min-width: 300px;
 }
